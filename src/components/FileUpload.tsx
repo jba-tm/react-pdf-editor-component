@@ -14,6 +14,7 @@ import {bookmarkPlugin} from '@react-pdf-viewer/bookmark';
 import DropzoneArea from "./Dropzone/DropzoneArea";
 import Sidebar from "./Sidebar";
 import {readFile} from "../helpers";
+import PDFDesigner from "./PDFContainer/Designer";
 
 
 type PDFFile = File | null;
@@ -104,87 +105,96 @@ function FileUpload() {
     // console.log(Thumbnails)
 
     return (
-        <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.12.313/build/pdf.worker.js">
+        <div>
+            <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.12.313/build/pdf.worker.js">
 
-            <div
-                style={{
-                    height: '500px',
-                    // width: '900px',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                }}
-            >
                 <div
-                    className="rpv-core__viewer"
                     style={{
-                        border: '1px solid rgba(0, 0, 0, 0.3)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        height: '100%',
+                        height: '500px',
+                        // width: '900px',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
                     }}
                 >
                     <div
+                        className="rpv-core__viewer"
                         style={{
-                            alignItems: 'center',
-                            backgroundColor: '#eeeeee',
-                            borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                            border: '1px solid rgba(0, 0, 0, 0.3)',
                             display: 'flex',
-                            padding: '4px',
+                            flexDirection: 'column',
+                            height: '100%',
                         }}
                     >
-                        <Toolbar>{renderDefaultToolbar(transform)}</Toolbar>
-                    </div>
-                    <div
-                        style={{
-                            border: '1px solid rgba(0, 0, 0, .3)',
-                            flex: 1,
-                            display: 'flex',
-                            height: '100%',
-                            width: '100%',
-                        }}>
-
                         <div
                             style={{
-                                flex: 1,
-                                overflow: 'hidden',
+                                alignItems: 'center',
+                                backgroundColor: '#eeeeee',
+                                borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                                display: 'flex',
+                                padding: '4px',
                             }}
                         >
-                            <Viewer
-                                fileUrl={pdfData as string}
-                                plugins={[toolbarPluginInstance, searchPluginInstance, thumbnailPluginInstance]}
-                                scrollMode={ScrollMode.Page}
-                                defaultScale={0.5}
-                            />
+                            <Toolbar>{renderDefaultToolbar(transform)}</Toolbar>
                         </div>
-                        {/*<div*/}
-                        {/*    style={{*/}
-                        {/*        borderLeft: '1px solid rgba(0, 0, 0, .2)',*/}
-                        {/*        flex: '0 0 15rem',*/}
-                        {/*        width: '15rem',*/}
-                        {/*    }}*/}
-                        {/*>*/}
-                        <Sidebar
-                            searchPluginInstance={searchPluginInstance}
-                            thumbnailTabContent={<Thumbnails/>} store={store}
-                            bookmarkTabContent={<Bookmarks/>}
-                        />
-                        {/*</div>*/}
+                        <div
+                            style={{
+                                border: '1px solid rgba(0, 0, 0, .3)',
+                                flex: 1,
+                                display: 'flex',
+                                height: '100%',
+                                width: '100%',
+                            }}>
+
+                            <div
+                                style={{
+                                    flex: 1,
+                                    overflow: 'hidden',
+                                }}
+                            >
+                                <Viewer
+                                    fileUrl={pdfData as string}
+                                    plugins={[toolbarPluginInstance, searchPluginInstance, thumbnailPluginInstance]}
+                                    scrollMode={ScrollMode.Page}
+                                    defaultScale={0.5}
+                                />
+                            </div>
+                            {/*<div*/}
+                            {/*    style={{*/}
+                            {/*        borderLeft: '1px solid rgba(0, 0, 0, .2)',*/}
+                            {/*        flex: '0 0 15rem',*/}
+                            {/*        width: '15rem',*/}
+                            {/*    }}*/}
+                            {/*>*/}
+                            <Sidebar
+                                searchPluginInstance={searchPluginInstance}
+                                thumbnailTabContent={<Thumbnails/>} store={store}
+                                bookmarkTabContent={<Bookmarks/>}
+                            />
+                            {/*</div>*/}
+                        </div>
                     </div>
                 </div>
-            </div>
 
 
-            {/*<div*/}
-            {/*    style={{*/}
-            {/*        height: '500px',*/}
-            {/*        // width: '900px',*/}
-            {/*        marginLeft: 'auto',*/}
-            {/*        marginRight: 'auto',*/}
-            {/*    }}*/}
-            {/*>*/}
-            {/*        <Viewer fileUrl={pdfData as string} plugins={[defaultLayoutPluginInstance]} />*/}
-            {/*</div>*/}
-        </Worker>
+                {/*<div*/}
+                {/*    style={{*/}
+                {/*        height: '500px',*/}
+                {/*        // width: '900px',*/}
+                {/*        marginLeft: 'auto',*/}
+                {/*        marginRight: 'auto',*/}
+                {/*    }}*/}
+                {/*>*/}
+                {/*        <Viewer fileUrl={pdfData as string} plugins={[defaultLayoutPluginInstance]} />*/}
+                {/*</div>*/}
+            </Worker>
+
+
+            <Paper elevation={3} style={{padding: 5}}>
+                <Box p={3} textAlign="center">
+                    <PDFDesigner pdfData={pdfData}/>
+                </Box>
+            </Paper>
+        </div>
     );
 }
 

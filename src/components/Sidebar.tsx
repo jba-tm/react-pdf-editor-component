@@ -5,6 +5,51 @@ import {MinimalButton, Tooltip, Splitter, Position, SplitterSize, Icon, Spinner,
 
 import {Match, NextIcon, PreviousIcon, RenderSearchProps, SearchPlugin} from '@react-pdf-viewer/search';
 
+
+const BookmarkIcon = () => {
+    return (
+        <Icon size={16}>
+            <path
+                d="M11.5,1.5h11c0.552,0,1,0.448,1,1v20c0,0.552-0.448,1-1,1h-21c-0.552,0-1-0.448-1-1v-20c0-0.552,0.448-1,1-1h3"/>
+            <path
+                d="M11.5,10.5c0,0.55-0.3,0.661-0.659,0.248L8,7.5l-2.844,3.246c-0.363,0.414-0.659,0.3-0.659-0.247v-9c0-0.552,0.448-1,1-1h5 c0.552,0,1,0.448,1,1L11.5,10.5z"/>
+            <path d="M14.5,6.499h6"/>
+            <path d="M14.5,10.499h6"/>
+            <path d="M3.5,14.499h17"/>
+            <path d="M3.5,18.499h16.497"/>
+        </Icon>
+    );
+};
+
+const ThumbnailIcon = () => {
+    return (
+        <Icon size={16}>
+            <path
+                d="M10.5,9.5c0,0.552-0.448,1-1,1h-8c-0.552,0-1-0.448-1-1v-8c0-0.552,0.448-1-1-1h8c0.552,0,1,0.448,1,1V9.5z M23.5,9.5c0,0.552-0.448,1-1,1h-8c-0.552,0-1-0.448-1-1v-8c0-0.552,0.448-1-1-1h8c0.552,0,1,0.448,1,1V9.5z M10.5,22.5c0,0.552-0.448,1-1,1h-8c-0.552,0-1-0.448-1-1v-8c0-0.552,0.448-1-1-1h8c0.552,0,1,0.448,1,1V22.5z M23.5,22.5c0,0.552-0.448,1-1,1 h-8c-0.552,0-1-0.448-1-1v-8c0-0.552,0.448-1-1-1h8c0.552,0,1,0.448,1,1V22.5z"/>
+        </Icon>
+    );
+};
+
+const SearchIcon = () => {
+    return (
+        <Icon ignoreDirection={true} size={16}>
+            <path
+                d="M10.5,0.5c5.523,0,10,4.477,10,10s-4.477,10-10,10s-10-4.477-10-10S4.977,0.5,10.5,0.5z M23.5,23.5 l-5.929-5.929"/>
+        </Icon>
+    );
+};
+
+const DownloadIcon = () => {
+    return (
+        <Icon size={16}>
+            <path d="M5.5,11.5c-.275,0-.341.159-.146.354l6.292,6.293a.5.5,0,0,0,.709,0l6.311-6.275c.2-.193.13-.353-.145-.355L15.5,11.5V1.5a1,1,0,0,0-1-1h-5a1,1,0,0,0-1,1V11a.5.5,0,0,1-.5.5Z" />
+            <path d="M23.5,18.5v4a1,1,0,0,1-1,1H1.5a1,1,0,0,1-1-1v-4" />
+        </Icon>
+    );
+};
+
+
+
 enum SearchStatus {
     NotSearchedYet,
     Searching,
@@ -185,38 +230,6 @@ const SearchContent: React.FC<SearchSidebarProps> = ({searchPluginInstance}) => 
     );
 };
 
-const BookmarkIcon = () => {
-    return (
-        <Icon size={16}>
-            <path
-                d="M11.5,1.5h11c0.552,0,1,0.448,1,1v20c0,0.552-0.448,1-1,1h-21c-0.552,0-1-0.448-1-1v-20c0-0.552,0.448-1,1-1h3"/>
-            <path
-                d="M11.5,10.5c0,0.55-0.3,0.661-0.659,0.248L8,7.5l-2.844,3.246c-0.363,0.414-0.659,0.3-0.659-0.247v-9c0-0.552,0.448-1,1-1h5 c0.552,0,1,0.448,1,1L11.5,10.5z"/>
-            <path d="M14.5,6.499h6"/>
-            <path d="M14.5,10.499h6"/>
-            <path d="M3.5,14.499h17"/>
-            <path d="M3.5,18.499h16.497"/>
-        </Icon>
-    );
-};
-
-const ThumbnailIcon = () => {
-    return (
-        <Icon size={16}>
-            <path
-                d="M10.5,9.5c0,0.552-0.448,1-1,1h-8c-0.552,0-1-0.448-1-1v-8c0-0.552,0.448-1-1-1h8c0.552,0,1,0.448,1,1V9.5z M23.5,9.5c0,0.552-0.448,1-1,1h-8c-0.552,0-1-0.448-1-1v-8c0-0.552,0.448-1-1-1h8c0.552,0,1,0.448,1,1V9.5z M10.5,22.5c0,0.552-0.448,1-1,1h-8c-0.552,0-1-0.448-1-1v-8c0-0.552,0.448-1-1-1h8c0.552,0,1,0.448,1,1V22.5z M23.5,22.5c0,0.552-0.448,1-1,1 h-8c-0.552,0-1-0.448-1-1v-8c0-0.552,0.448-1-1-1h8c0.552,0,1,0.448,1,1V22.5z"/>
-        </Icon>
-    );
-};
-
-const SearchIcon = () => {
-    return (
-        <Icon ignoreDirection={true} size={16}>
-            <path
-                d="M10.5,0.5c5.523,0,10,4.477,10,10s-4.477,10-10,10s-10-4.477-10-10S4.977,0.5,10.5,0.5z M23.5,23.5 l-5.929-5.929"/>
-        </Icon>
-    );
-};
 
 const TOOLTIP_OFFSET_RTL = {left: -8, top: 0};
 
@@ -258,6 +271,11 @@ const Sidebar = ({
             content: <SearchContent searchPluginInstance={searchPluginInstance}/>,
             icon: <SearchIcon/>,
             title: 'Search',
+        },
+        {
+            content: <div/>,
+            icon: <DownloadIcon/>,
+            title: 'Save as PDF',
         },
     ];
 
