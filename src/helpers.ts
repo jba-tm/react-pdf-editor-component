@@ -1,5 +1,9 @@
 // @ts-ignore
 import {Template, Font, checkTemplate, BLANK_PDF} from "@pdfme/common";
+import { Form, Viewer, Designer } from "@pdfme/ui";
+import { generate } from "@pdfme/generator";
+import { text, barcodes, image } from "@pdfme/schemas"
+import plugins from "./components/PDFContainer/plugins";
 
 const fontObjList = [
     {
@@ -94,6 +98,34 @@ export const downloadJsonFile = (json: any, title: string) => {
         URL.revokeObjectURL(url);
     }
 };
+
+export const getPlugins = () => {
+    return {
+        Text: text,
+        Signature: plugins.signature,
+        QR: barcodes.qrcode,
+        Image: image,
+    }
+}
+
+export const generatePDF = async (currentRef: Designer | Form | Viewer | null) => {
+    if (!currentRef) return;
+    const template = currentRef.getTemplate();
+    const inputs = typeof (currentRef as Viewer | Form).getInputs === "function" ? (currentRef as Viewer | Form).getInputs() : template.sampledata ?? [];
+    const font = await getFontsData();
+
+    const pdf = await generate({
+        template,
+        inputs,
+        options: { font },
+        plugins: getPlugins(),
+    });
+
+    const blob = new Blob([pdf.buffer], { type: "application/pdf" });
+    window.open(URL.createObjectURL(blob));
+
+};
+
 
 export const isJsonString = (str: string) => {
     try {

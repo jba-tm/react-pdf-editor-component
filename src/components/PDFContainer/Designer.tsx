@@ -7,7 +7,10 @@ import {Template} from "@pdfme/common";
 
 import {
     getTemplate,
-    readFile,
+
+    getPlugins,
+    generatePDF,
+    // readFile,
     // cloneDeep,
     // getTemplateFromJsonFile,
     // downloadJsonFile,
@@ -49,6 +52,8 @@ function PDFDesigner({pdfData}: { pdfData: string|ArrayBuffer }) {
             designer.current = new Designer({
                 domContainer: designerRef.current,
                 template,
+
+                plugins: getPlugins(),
             });
             // designer.current.onSaveTemplate(onSaveTemplate);
 
@@ -163,7 +168,9 @@ function PDFDesigner({pdfData}: { pdfData: string|ArrayBuffer }) {
                 {/*<span style={{margin: "0 1rem"}}>/</span>*/}
                 {/*<button onClick={onResetTemplate}>Reset Template</button>*/}
                 <span style={{margin: "0 1rem"}}>/</span>
-                <button onClick={onGeneratePDF}>Generate PDF</button>
+                {/*<button onClick={onGeneratePDF}>Generate PDF</button>*/}
+                <button onClick={() => generatePDF(designer.current)}>Generate PDF</button>
+
             </header>
             <div ref={designerRef} style={{width: '100%', height: `calc(100vh - ${headerHeight}px)`}}/>
         </div>

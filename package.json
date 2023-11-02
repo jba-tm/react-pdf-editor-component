@@ -10,10 +10,10 @@
     "@mui/icons-material": "^5.14.16",
     "@mui/material": "^5.14.16",
     "@mui/system": "^5.14.16",
-    "@pdfme/common": "^3.0.0-beta.1",
-    "@pdfme/generator": "^3.0.0-beta.1",
-    "@pdfme/schemas": "^2.2.1",
-    "@pdfme/ui": "^2.2.1",
+    "@pdfme/common": "^3.0.0-beta.2",
+    "@pdfme/generator": "^3.0.0-beta.2",
+    "@pdfme/schemas": "^3.0.0-beta.2",
+    "@pdfme/ui": "^3.0.0-beta.2",
     "@react-pdf-viewer/core": "^3.12.0",
     "@react-pdf-viewer/default-layout": "^3.12.0",
     "@react-pdf-viewer/toolbar": "^3.12.0",
@@ -22,6 +22,7 @@
     "react-dropzone": "^14.2.3",
     "react-scripts": "5.0.1",
     "sass": "^1.69.5",
+    "signature_pad": "^4.1.6",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
