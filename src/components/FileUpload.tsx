@@ -189,7 +189,7 @@ function FileUpload() {
             </Worker>
 
 
-            <Paper elevation={3} style={{padding: 5}}>
+            <Paper elevation={3} style={{padding: 5, marginTop: 50}}>
                 <Box p={3} textAlign="center">
                     <PDFDesigner pdfData={pdfData}/>
                 </Box>
