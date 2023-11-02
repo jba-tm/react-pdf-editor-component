@@ -5,11 +5,11 @@ import reportWebVitals from './reportWebVitals';
 
 import './index.css';
 
-import '@react-pdf-viewer/core/lib/styles/index.css';
-import '@react-pdf-viewer/toolbar/lib/styles/index.css';
+// import '@react-pdf-viewer/core/lib/styles/index.css';
+// import '@react-pdf-viewer/toolbar/lib/styles/index.css';
 // import '@react-pdf-viewer/search/lib/styles/index.css';
-import '@react-pdf-viewer/thumbnail/lib/styles/index.css';
-import '@react-pdf-viewer/bookmark/lib/styles/index.css';
+// import '@react-pdf-viewer/thumbnail/lib/styles/index.css';
+// import '@react-pdf-viewer/bookmark/lib/styles/index.css';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import {ThemeProvider} from '@mui/material/styles';
