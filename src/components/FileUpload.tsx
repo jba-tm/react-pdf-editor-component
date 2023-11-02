@@ -1,21 +1,20 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 import {DropEvent} from 'react-dropzone';
 
 import {Box, Paper} from '@mui/material';
+
+import core, {Viewer, Worker, ScrollMode} from '@react-pdf-viewer/core';
+import {searchPlugin} from '@react-pdf-viewer/search';
+import {defaultLayoutPlugin} from '@react-pdf-viewer/default-layout';
+import type {ToolbarSlot, TransformToolbarSlot} from '@react-pdf-viewer/toolbar';
+import {toolbarPlugin} from '@react-pdf-viewer/toolbar';
+import {thumbnailPlugin} from '@react-pdf-viewer/thumbnail';
+import {bookmarkPlugin} from '@react-pdf-viewer/bookmark';
+
 import DropzoneArea from "./Dropzone/DropzoneArea";
-
-
-import {Viewer, Worker, ScrollMode} from '@react-pdf-viewer/core';
+import Sidebar from "./Sidebar";
 import {readFile} from "../helpers";
 
-import {toolbarPlugin} from '@react-pdf-viewer/toolbar';
-import {searchPlugin} from '@react-pdf-viewer/search';
-
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
-import {scrollModePlugin} from '@react-pdf-viewer/scroll-mode';
-import type {ToolbarSlot, TransformToolbarSlot} from '@react-pdf-viewer/toolbar';
-
-import SearchSidebar from './Sidebar';
 
 type PDFFile = File | null;
 
@@ -23,24 +22,50 @@ function FileUpload() {
     const [pdfFile, setPdfFile] = useState<PDFFile>(null);
     const [pdfData, setPdfData] = useState<string | ArrayBuffer>("");
 
-    const toolbarPluginInstance = toolbarPlugin();
-    const searchPluginInstance = searchPlugin();
-    const scrollModePluginInstance = scrollModePlugin();
-    const {renderDefaultToolbar, Toolbar} = toolbarPluginInstance;
+    const store = useMemo(function () {
+        return core.createStore({
+            isCurrentTabOpened: false,
+            currentTab: 0,
+        });
+    }, []);
 
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
-    const transform: TransformToolbarSlot = (slot: ToolbarSlot) => {
-        const {NumberOfPages} = slot;
-        return Object.assign({}, slot, {
-            NumberOfPages: () => (
-                <>
-                    of <NumberOfPages/>
-                </>
-            ),
-        });
-    };
+    const searchPluginInstance = searchPlugin();
+    const toolbarPluginInstance = toolbarPlugin();
+
+    const thumbnailPluginInstance = thumbnailPlugin();
+    const {Thumbnails} = thumbnailPluginInstance;
 
 
+    const bookmarkPluginInstance = bookmarkPlugin();
+    const {Bookmarks} = bookmarkPluginInstance;
+
+    const {renderDefaultToolbar, Toolbar} = toolbarPluginInstance;
+
+    const transform: TransformToolbarSlot = (slot: ToolbarSlot) => ({
+        ...slot,
+        Download: () => <></>,
+        DownloadMenuItem: () => <></>,
+        Open: () => <></>,
+        OpenMenuItem: () => <></>,
+        Print: () => <></>,
+        PrintMenuItem: () => <></>,
+
+        Search: () => <></>,
+        ShowSearchPopover: () => <></>,
+
+        SwitchScrollMode: () => <></>,
+        SwitchScrollModeMenuItem: () => <></>,
+
+        SwitchSelectionMode: () => <></>,
+        SwitchSelectionModeMenuItem: () => <></>,
+
+        SwitchTheme: () => <></>,
+        SwitchThemeMenuItem: () => <></>,
+
+        SwitchViewMode: () => <></>,
+        SwitchViewModeMenuItem: () => <></>,
+    });
     const onDrop = async (acceptedFiles: File[], event: DropEvent) => {
         // Ensure only PDF files are accepted
         const isPDF = acceptedFiles.every((file) => file.type === 'application/pdf');
@@ -76,78 +101,92 @@ function FileUpload() {
         return <div>Loading</div>
     }
 
+    // console.log(Thumbnails)
+
     return (
-        <Paper elevation={3} style={{padding: 5}}>
-            <Box p={3} textAlign="center">
-                <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.12.313/build/pdf.worker.js">
+        <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.12.313/build/pdf.worker.js">
+
+            <div
+                style={{
+                    height: '500px',
+                    // width: '900px',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                }}
+            >
+                <div
+                    className="rpv-core__viewer"
+                    style={{
+                        border: '1px solid rgba(0, 0, 0, 0.3)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: '100%',
+                    }}
+                >
                     <div
-                        className="rpv-core__viewer"
                         style={{
-                            border: '1px solid rgba(0, 0, 0, 0.3)',
+                            alignItems: 'center',
+                            backgroundColor: '#eeeeee',
+                            borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                             display: 'flex',
-                            flexDirection: 'column',
-                            height: '100%',
+                            padding: '4px',
                         }}
                     >
+                        <Toolbar>{renderDefaultToolbar(transform)}</Toolbar>
+                    </div>
+                    <div
+                        style={{
+                            border: '1px solid rgba(0, 0, 0, .3)',
+                            flex: 1,
+                            display: 'flex',
+                            height: '100%',
+                            width: '100%',
+                        }}>
+
                         <div
                             style={{
-                                alignItems: 'center',
-                                backgroundColor: '#eeeeee',
-                                borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-                                display: 'flex',
-                                padding: '4px',
+                                flex: 1,
+                                overflow: 'hidden',
                             }}
                         >
-                            <Toolbar>{renderDefaultToolbar(transform)}</Toolbar>
+                            <Viewer
+                                fileUrl={pdfData as string}
+                                plugins={[toolbarPluginInstance, searchPluginInstance, thumbnailPluginInstance]}
+                                scrollMode={ScrollMode.Page}
+                                defaultScale={0.5}
+                            />
                         </div>
-                        <div
-                            style={{
-                                border: '1px solid rgba(0, 0, 0, .3)',
-                                display: 'flex',
-                                height: '100%',
-                                width: '100%',
-                            }}>
-
-                            <div
-                                style={{
-                                    flex: 1,
-                                    overflow: 'hidden',
-                                }}
-                            >
-                                <Viewer
-                                    fileUrl={pdfData as string}
-                                    plugins={[toolbarPluginInstance, searchPluginInstance]}
-                                    // scrollMode={ScrollMode.Horizontal}
-                                />
-                            </div>
-                            <div
-                                style={{
-                                    borderLeft: '1px solid rgba(0, 0, 0, .2)',
-                                    flex: '0 0 15rem',
-                                    width: '15rem',
-                                }}
-                            >
-                                <SearchSidebar searchPluginInstance={searchPluginInstance}/>
-                            </div>
-                        </div>
+                        {/*<div*/}
+                        {/*    style={{*/}
+                        {/*        borderLeft: '1px solid rgba(0, 0, 0, .2)',*/}
+                        {/*        flex: '0 0 15rem',*/}
+                        {/*        width: '15rem',*/}
+                        {/*    }}*/}
+                        {/*>*/}
+                        <Sidebar
+                            searchPluginInstance={searchPluginInstance}
+                            thumbnailTabContent={<Thumbnails/>} store={store}
+                            bookmarkTabContent={<Bookmarks/>}
+                        />
+                        {/*</div>*/}
                     </div>
-                    {/*<div*/}
-                    {/*    style={{*/}
-                    {/*        height: '750px',*/}
-                    {/*        width: '900px',*/}
-                    {/*        marginLeft: 'auto',*/}
-                    {/*        marginRight: 'auto',*/}
-                    {/*    }}*/}
-                    {/*>*/}
-                    {/*    <Viewer*/}
-                    {/*        fileUrl={pdfData as string}*/}
-                    {/*        plugins={[defaultLayoutPluginInstance]}*/}
-                    {/*    />*/}
-                    {/*</div>*/}
-                </Worker>
-            </Box>
-        </Paper>
+                </div>
+            </div>
+
+
+            {/*<div*/}
+            {/*    style={{*/}
+            {/*        height: '500px',*/}
+            {/*        // width: '900px',*/}
+            {/*        marginLeft: 'auto',*/}
+            {/*        marginRight: 'auto',*/}
+            {/*    }}*/}
+            {/*>*/}
+            {/*        <Viewer fileUrl={pdfData as string} plugins={[defaultLayoutPluginInstance]} />*/}
+            {/*</div>*/}
+        </Worker>
     );
 }
+
 
 export default FileUpload;

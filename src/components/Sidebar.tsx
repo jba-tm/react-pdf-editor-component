@@ -1,6 +1,9 @@
-import * as React from 'react';
-import { MinimalButton, Spinner, TextBox } from '@react-pdf-viewer/core';
-import { Match, NextIcon, PreviousIcon, RenderSearchProps, SearchPlugin } from '@react-pdf-viewer/search';
+import React, {useState, useRef, useEffect} from 'react';
+import clsx from "clsx"
+
+import {MinimalButton, Tooltip, Splitter, Position, SplitterSize, Icon, Spinner, TextBox} from '@react-pdf-viewer/core';
+
+import {Match, NextIcon, PreviousIcon, RenderSearchProps, SearchPlugin} from '@react-pdf-viewer/search';
 
 enum SearchStatus {
     NotSearchedYet,
@@ -8,15 +11,16 @@ enum SearchStatus {
     FoundResults,
 }
 
+
 interface SearchSidebarProps {
     searchPluginInstance: SearchPlugin;
 }
 
-const SearchSidebar: React.FC<SearchSidebarProps> = ({ searchPluginInstance }) => {
+const SearchContent: React.FC<SearchSidebarProps> = ({searchPluginInstance}) => {
     const [searchStatus, setSearchStatus] = React.useState(SearchStatus.NotSearchedYet);
     const [matches, setMatches] = React.useState<Match[]>([]);
 
-    const { Search } = searchPluginInstance;
+    const {Search} = searchPluginInstance;
 
     const renderMatchSample = (match: Match) => {
         //  match.startIndex    match.endIndex
@@ -37,7 +41,7 @@ const SearchSidebar: React.FC<SearchSidebarProps> = ({ searchPluginInstance }) =
         return (
             <div>
                 {begin}
-                <span style={{ backgroundColor: 'rgb(255, 255, 0)' }}>
+                <span style={{backgroundColor: 'rgb(255, 255, 0)'}}>
                     {match.pageText.substring(match.startIndex, match.endIndex)}
                 </span>
                 {end}
@@ -48,7 +52,7 @@ const SearchSidebar: React.FC<SearchSidebarProps> = ({ searchPluginInstance }) =
     return (
         <Search>
             {(renderSearchProps: RenderSearchProps) => {
-                const { currentMatch, keyword, setKeyword, jumpToMatch, jumpToNextMatch, jumpToPreviousMatch, search } =
+                const {currentMatch, keyword, setKeyword, jumpToMatch, jumpToNextMatch, jumpToPreviousMatch, search} =
                     renderSearchProps;
 
                 const handleSearchKeyDown = (e: React.KeyboardEvent) => {
@@ -71,8 +75,8 @@ const SearchSidebar: React.FC<SearchSidebarProps> = ({ searchPluginInstance }) =
                             width: '100%',
                         }}
                     >
-                        <div style={{ padding: '.5rem' }}>
-                            <div style={{ position: 'relative' }}>
+                        <div style={{padding: '.5rem'}}>
+                            <div style={{position: 'relative'}}>
                                 <TextBox
                                     placeholder="Enter to search"
                                     value={keyword}
@@ -90,7 +94,7 @@ const SearchSidebar: React.FC<SearchSidebarProps> = ({ searchPluginInstance }) =
                                             top: 0,
                                         }}
                                     >
-                                        <Spinner size="1.5rem" />
+                                        <Spinner size="1.5rem"/>
                                     </div>
                                 )}
                             </div>
@@ -116,13 +120,13 @@ const SearchSidebar: React.FC<SearchSidebarProps> = ({ searchPluginInstance }) =
                                             >
                                                 Found {matches.length} results
                                             </div>
-                                            <div style={{ marginLeft: 'auto', marginRight: '.5rem' }}>
+                                            <div style={{marginLeft: 'auto', marginRight: '.5rem'}}>
                                                 <MinimalButton onClick={jumpToPreviousMatch}>
-                                                    <PreviousIcon />
+                                                    <PreviousIcon/>
                                                 </MinimalButton>
                                             </div>
                                             <MinimalButton onClick={jumpToNextMatch}>
-                                                <NextIcon />
+                                                <NextIcon/>
                                             </MinimalButton>
                                         </div>
                                         <div
@@ -134,7 +138,7 @@ const SearchSidebar: React.FC<SearchSidebarProps> = ({ searchPluginInstance }) =
                                             }}
                                         >
                                             {matches.map((match, index) => (
-                                                <div key={index} style={{ margin: '1rem 0' }}>
+                                                <div key={index} style={{margin: '1rem 0'}}>
                                                     <div
                                                         style={{
                                                             display: 'flex',
@@ -181,4 +185,178 @@ const SearchSidebar: React.FC<SearchSidebarProps> = ({ searchPluginInstance }) =
     );
 };
 
-export default SearchSidebar;
+const BookmarkIcon = () => {
+    return (
+        <Icon size={16}>
+            <path
+                d="M11.5,1.5h11c0.552,0,1,0.448,1,1v20c0,0.552-0.448,1-1,1h-21c-0.552,0-1-0.448-1-1v-20c0-0.552,0.448-1,1-1h3"/>
+            <path
+                d="M11.5,10.5c0,0.55-0.3,0.661-0.659,0.248L8,7.5l-2.844,3.246c-0.363,0.414-0.659,0.3-0.659-0.247v-9c0-0.552,0.448-1,1-1h5 c0.552,0,1,0.448,1,1L11.5,10.5z"/>
+            <path d="M14.5,6.499h6"/>
+            <path d="M14.5,10.499h6"/>
+            <path d="M3.5,14.499h17"/>
+            <path d="M3.5,18.499h16.497"/>
+        </Icon>
+    );
+};
+
+const ThumbnailIcon = () => {
+    return (
+        <Icon size={16}>
+            <path
+                d="M10.5,9.5c0,0.552-0.448,1-1,1h-8c-0.552,0-1-0.448-1-1v-8c0-0.552,0.448-1-1-1h8c0.552,0,1,0.448,1,1V9.5z M23.5,9.5c0,0.552-0.448,1-1,1h-8c-0.552,0-1-0.448-1-1v-8c0-0.552,0.448-1-1-1h8c0.552,0,1,0.448,1,1V9.5z M10.5,22.5c0,0.552-0.448,1-1,1h-8c-0.552,0-1-0.448-1-1v-8c0-0.552,0.448-1-1-1h8c0.552,0,1,0.448,1,1V22.5z M23.5,22.5c0,0.552-0.448,1-1,1 h-8c-0.552,0-1-0.448-1-1v-8c0-0.552,0.448-1-1-1h8c0.552,0,1,0.448,1,1V22.5z"/>
+        </Icon>
+    );
+};
+
+const SearchIcon = () => {
+    return (
+        <Icon ignoreDirection={true} size={16}>
+            <path
+                d="M10.5,0.5c5.523,0,10,4.477,10,10s-4.477,10-10,10s-10-4.477-10-10S4.977,0.5,10.5,0.5z M23.5,23.5 l-5.929-5.929"/>
+        </Icon>
+    );
+};
+
+const TOOLTIP_OFFSET_RTL = {left: -8, top: 0};
+
+interface SidebarProps {
+    searchPluginInstance: SearchPlugin;
+    store: any;
+    bookmarkTabContent: any;
+    thumbnailTabContent: any;
+}
+
+
+const Sidebar = ({
+                     // attachmentTabContent,
+                     bookmarkTabContent,
+                     store,
+                     thumbnailTabContent,
+                     searchPluginInstance
+                     // tabs,
+                 }: SidebarProps) => {
+    const containerRef = useRef<any>();
+    const [opened, setOpened] = useState(store.get('isCurrentTabOpened') || false);
+    const [currentTab, setCurrentTab] = useState(Math.max(store.get('currentTab') || 0, 0));
+
+
+    const resizeConstrain = (size: SplitterSize) => size.firstHalfPercentage >= 20 && size.firstHalfPercentage <= 80;
+
+    const listTabs = [
+        {
+            content: thumbnailTabContent,
+            icon: <ThumbnailIcon/>,
+            title: 'Thumbnail',
+        },
+        {
+            content: bookmarkTabContent,
+            icon: <BookmarkIcon/>,
+            title: 'Bookmark',
+        },
+        {
+            content: <SearchContent searchPluginInstance={searchPluginInstance}/>,
+            icon: <SearchIcon/>,
+            title: 'Search',
+        },
+    ];
+
+    // const listTabs = defaultTabs;
+
+    const toggleTab = (index: number) => {
+        if (currentTab === index) {
+            store.update('isCurrentTabOpened', !store.get('isCurrentTabOpened'));
+            const container = containerRef.current;
+            if (container) {
+                const width = container.style.width;
+                if (width) {
+                    container.style.removeProperty('width');
+                }
+            }
+        } else {
+            store.update('currentTab', index);
+        }
+    };
+
+    const switchToTab = (index: number) => {
+        if (index >= 0 && index <= listTabs.length - 1) {
+            store.update('isCurrentTabOpened', true);
+            setCurrentTab(index);
+        }
+    };
+
+    const handleCurrentTabOpened = (opened: boolean) => {
+        setOpened(opened);
+    };
+
+    useEffect(() => {
+        store.subscribe('currentTab', switchToTab);
+        store.subscribe('isCurrentTabOpened', handleCurrentTabOpened);
+        return () => {
+            store.unsubscribe('currentTab', switchToTab);
+            store.unsubscribe('isCurrentTabOpened', handleCurrentTabOpened);
+        };
+    }, []);
+
+    if (listTabs.length === 0) {
+        return <></>;
+    }
+
+    return (
+        <>
+            <div data-testid="default-layout__sidebar" className={clsx({
+                'rpv-default-layout__sidebar': true,
+                'rpv-default-layout__sidebar--opened': opened,
+                "rpv-default-layout__sidebar-content--right": true
+            })} ref={containerRef}>
+                <div className="rpv-default-layout__sidebar-tabs">
+                    <div
+                        aria-labelledby={`rpv-default-layout__sidebar-tab-${currentTab}`}
+                        id="rpv-default-layout__sidebar-content"
+                        className={clsx({
+                            'rpv-default-layout__sidebar-content': true,
+                            'rpv-default-layout__sidebar-content--opened': opened,
+                            "rpv-default-layout__sidebar-content--right": true
+                        })}
+                        role="tabpanel"
+                        tabIndex={-1}
+                    >
+                        {listTabs[currentTab].content}
+                    </div>
+                    <div className="rpv-default-layout__sidebar-headers" role="tablist" aria-orientation="vertical">
+                        {listTabs.map((tab: any, index: number) => (
+                            <div
+                                aria-controls="rpv-default-layout__sidebar-content"
+                                aria-selected={currentTab === index}
+                                key={index}
+                                className="rpv-default-layout__sidebar-header"
+                                id={`rpv-default-layout__sidebar-tab-${index}`}
+                                role="tab"
+                            >
+                                <Tooltip
+                                    position={Position.LeftCenter}
+                                    ariaControlsSuffix={`default-layout-sidebar-tab-${index}`}
+                                    target={
+                                        <MinimalButton
+                                            ariaLabel={tab.title}
+                                            isSelected={currentTab === index}
+                                            onClick={() => toggleTab(index)}
+                                        >
+                                            {tab.icon}
+                                        </MinimalButton>
+                                    }
+                                    content={() => tab.title}
+                                    offset={TOOLTIP_OFFSET_RTL}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                {opened && <Splitter constrain={resizeConstrain}/>}
+            </div>
+        </>
+    );
+};
+
+export default Sidebar;
+
